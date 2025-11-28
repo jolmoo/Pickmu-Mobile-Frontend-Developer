@@ -8,7 +8,7 @@
 ## Project Overview
 Pickmu is a delivery mobile app connecting individuals and businesses with nearby riders. Users can request services, track orders in real time, manage profiles and wallets, upload documents, and communicate directly with riders.  
 
-I developed the **complete mobile frontend**, including all user and rider interfaces, adaptive screens, and integration with APIs and device features such as geolocation, push notifications, and real-time updates using Webhooks.  
+I developed the **complete mobile frontend**, including all user and rider interfaces, adaptive screens, and integration with APIs. Crucially, I managed the **EAS build process** for both **iOS and Android** and handled the **deployment to the App Store and Google Play**. My core achievement lies in the complex **Geolocation and GPS Engineering** necessary for real-time, battery-efficient rider tracking.
 
 ---
 
@@ -54,7 +54,8 @@ I developed the **complete mobile frontend**, including all user and rider inter
 
 ## Key Features
 - Fully adaptive screens for responsive UI across devices.  
-- **Geolocation & Maps:** Real-time tracking of orders and delivery routes.  
+- **Advanced Geolocation & Maps:** Real-time tracking of orders and delivery routes.  
+- **Rider Operational Efficiency:** Implemented **dual-mode geolocation logic** to drastically optimize rider device battery life (low-consumption **IDLE** mode and high-precision **ACTIVE** mode).
 - **Authentication:** Email, Google, and Apple login options.  
 - **Real-time Chat:** Communication between users, riders, and support via Webhooks.  
 - **Vehicle & Document Management:** Register, verify, and manage rider information.  
@@ -64,15 +65,27 @@ I developed the **complete mobile frontend**, including all user and rider inter
 
 ---
 
+## Technical Deep Dive: High-Performance GPS Engineering
+
+To ensure the mission-critical stability and efficiency of the Rider application, I engineered the following low-level solutions:
+
+1.  **Background Persistence and Stability:** Utilized **Expo Background Task** (`LOCATION_TASK_NAME`) to maintain active geolocation and session state (token) even when the app is backgrounded. This prevents the OS from killing the app, ensuring continuous tracking—a major challenge in logistics apps.
+2.  **Network and Battery Optimization (Batching):** The code dynamically manages GPS precision and employs a **batching system** (`updatesQueue`). This system collects up to 3 location updates and sends them in a single optimized network request every 5 seconds, significantly reducing resource drain and data usage.
+3.  **Deployment and Build Management:** Handled the entire **EAS (Expo Application Services) workflow**, including custom *development builds* and final *production builds* for store submission, ensuring a smooth Continuous Integration/Continuous Delivery (CI/CD) process.
+
+---
+
 ## Challenges and Solutions
+
 During development, I faced several challenges:  
 
-1. **Integrating geolocation and real-time tracking:** Ensuring accurate location updates and map rendering on both Android and iOS required optimizing state management and handling permission issues.  
+1. **Integrating advanced geolocation and real-time tracking:** Ensuring accurate location updates and map rendering on both Android and iOS while maximizing battery life.
+    > **Solution:** Implemented **Dual (IDLE/ACTIVE) geolocation logic** for performance and battery saving, coupled with a **Background Task** to maintain tracking persistence.
 2. **Adaptive UI for multiple screen sizes:** Some components did not scale correctly on smaller devices. Solved by using responsive layouts and dynamic styling.  
 3. **Authentication across multiple providers:** Implementing Google, Apple, and email login in a single flow was complex. Used proper libraries and context-based state management to unify authentication logic.  
 4. **Real-time chat integration with Webhooks:** Ensuring messages sync correctly between users and riders required careful handling of API calls, state updates, and webhook events.  
-5. **Document uploads and validations:** Handling large files and validation errors without crashing the app involved testing multiple edge cases and asynchronous flows.  
-6. **Push notifications via EAS:** Ensuring notifications were delivered correctly for order updates and chat required proper integration and testing across platforms.  
+5. **Push notifications via EAS:** Ensuring notifications were delivered correctly for order updates and chat required proper integration and testing across platforms.
+6. **Build Process and Testing:** Given the complexity of background geolocation, a strict installation flow was required for iOS testing, involving enabling **Developer Mode** and executing the JS bundle using `npx expo start --dev-client` for correct loading and real-time debugging.
 
 Thanks to **Fernando (backend developer)** for providing support with API endpoints, debugging, Webhooks, and backend integration, which made development much smoother.  
 
@@ -82,7 +95,3 @@ Thanks to **Fernando (backend developer)** for providing support with API endpoi
 [Jolmo]  
 [Portfolio Link]  
 [GitHub Link]  
-
----
-
-This README highlights all the screens, components, key features, and challenges of Pickmu's mobile frontend, including real-time updates via Webhooks and push notifications via EAS, while acknowledging backend collaboration and problem-solving during development.
